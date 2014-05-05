@@ -1,0 +1,21 @@
+{
+  "name": "react-github-repos",
+  "version": "0.0.0",
+  "authors": [
+    "Damien Ragoucy <damien.ragoucy@af83.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "qwest": "pyrsmk/qwest#0.5.5",
+    "bootstrap": "3.1.1",
+    "react": "0.10.0"
+  }
+}
