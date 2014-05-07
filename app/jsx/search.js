@@ -29,13 +29,13 @@
         return <li>{item.login}</li>;
       }
 
-      return this.props.items.map(getLogin);
+      return this.props.data.items.map(getLogin);
     },
 
     render: function() {
       return (
         <div className="container" role="main">
-          <h1>{this.props.nResults} results found</h1>
+          <h1>{this.props.data.nResults} results found</h1>
           <ul>
             {this.entries()}
           </ul>
@@ -58,7 +58,7 @@
       return (
         <div>
           <Header />
-          {Body(this.bodyData())}
+          <Body data={this.bodyData()} />
         </div>
       );
     }
