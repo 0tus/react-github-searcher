@@ -1,26 +1,30 @@
 /** @jsx React.DOM */
 
 var MainPage = React.createClass({
-  getInitialState: function() {
+  getDefaultProps: function() {
+    var routes = {
+      search: SearchPage,
+      results: true
+    };
+
     return {
-      unixTime: Date.now()
+      routes: routes
     };
   },
-  updateTimeState: function() {
-    this.setState({
-      unixTime: Date.now()
-    });
+
+  getInitialState: function() {
+    return {
+      user: null,
+      org:  null,
+      excludeForks: false,
+      route: "search"
+    };
   },
-  componentDidMount: function() {
-    this.interval = setInterval(this.updateTimeState, 10);
-  },
+
   render: function() {
-    return (
-      <div id="app">
-        <h2>{this.state.unixTime}</h2>
-      </div>
-    );
+    return this.props.routes[this.state.route](null);
   }
 });
 
+// Start app
 React.renderComponent(<MainPage />, document.getElementById("main"));
