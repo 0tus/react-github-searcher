@@ -17,5 +17,12 @@ JSX files
 
 All `.js(x)` files go into `app/jsx`
 
-Run `npm run watch` during development
+Development
+-----------
+
+Run `npm run watch` for live jsx files recompiling.
+
+Run `npm run serve` to launch a local http server on port 8080.
+
+Open your favorite web browser and open `http://localhost:8080`
 
