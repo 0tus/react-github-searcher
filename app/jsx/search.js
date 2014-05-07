@@ -24,21 +24,41 @@
   });
 
   var Body = React.createClass({
+    entries: function() {
+      function getLogin(item) {
+        return <li>{item.login}</li>;
+      }
+
+      return this.props.items.map(getLogin);
+    },
+
     render: function() {
       return (
         <div className="container" role="main">
-          <h1>Test</h1>
+          <h1>{this.props.nResults} results found</h1>
+          <ul>
+            {this.entries()}
+          </ul>
         </div>
       );
     }
   });
 
   var SearchPage = React.createClass({
+    bodyData: function() {
+      var results = this.props.results;
+
+      return {
+        nResults: results && results.total_count || 0,
+        items: results && results.items || []
+      };
+    },
+
     render: function() {
       return (
         <div>
           <Header />
-          <Body />
+          {Body(this.bodyData())}
         </div>
       );
     }
