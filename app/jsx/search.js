@@ -9,6 +9,14 @@
             <div className="navbar-header">
               <a className="navbar-brand">Github Repos Navigator</a>
             </div>
+            <div>
+              <form className="navbar-form navbar-right" role="form">
+                <div className="form-group">
+                  <input placeholder="User or organization" className="form-control" type="text" />
+                </div>
+                <button type="submit" className="btn btn-success">Search</button>
+              </form>
+            </div>
           </div>
         </div>
       );
