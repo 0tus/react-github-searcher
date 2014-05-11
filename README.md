@@ -4,12 +4,12 @@ React JS Github repo navigator
 Installation
 ------------
 
-Node.js and Bower are required.
+Node.js are required.
 
 From the project root folder:
 ```shell
 npm install
-bower install
+npm run install-vendors
 ```
 
 JSX files
@@ -25,4 +25,3 @@ Run `npm run watch` for live jsx files recompiling.
 Run `npm run serve` to launch a local http server on port 8080.
 
 Open your favorite web browser and open `http://localhost:8080`
-

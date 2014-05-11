@@ -6,12 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "jsx --watch app/jsx public/js",
-    "serve": "http-server"
+    "serve": "http-server",
+    "install-vendors": "bower install"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "http-server": "^0.6.1",
-    "react-tools": "^0.10.0"
+    "react-tools": "^0.10.0",
+    "bower": "~1.3.3"
   }
 }
