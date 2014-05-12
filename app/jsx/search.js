@@ -33,28 +33,67 @@
   // --- Body ---
 
   var Entry = React.createClass({
+    iconTypes: {
+      "User": "glyphicon-user",
+      "Organization": "glyphicon-home"
+    },
+
+    icon: function() {
+      return "glyphicon " + this.iconTypes[this.props.data.type];
+    },
+
     render: function() {
-      return <li>{this.props.login}</li>
+      var data = this.props.data;
+
+      return (
+        <a href={data.html_url} className="list-group-item entry-result">
+          <img src={data.avatar_url} className="pull-right" />
+          <span className={this.icon()}></span>
+          &nbsp;
+          <span className="entry-login">{data.login}</span>
+        </a>
+      );
+    }
+  });
+
+  var CurrentResult = React.createClass({
+    results: function() {
+      if (this.props.nResults === 0) {
+        return "No nResults"
+      }
+
+      return this.props.nResults + "results";
+    },
+    render: function() {
+      return (
+        <ul className="list-group">
+          <li className="list-group-item list-group-item-info">
+            <span className="badge">{this.results()}</span>
+            {this.props.search}
+          </li>
+        </ul>
+      );
     }
   });
 
   var Body = React.createClass({
     entries: function() {
       function addEntry(entry) {
-        return <Entry key={entry.login} login={entry.login} />;
+        return <Entry key={entry.login} data={entry} />;
       }
 
       return this.props.data.items.map(addEntry);
     },
 
     render: function() {
+      var data = this.props.data;
+
       return (
         <div className="container" role="main">
-          <h1>{this.props.data.nResults} results found</h1>
-          <h2>Search for: {this.props.data.search}</h2>
-          <ul>
+          <CurrentResult search={data.search}  nResults={data.nResults} />
+          <div className="list-group">
             {this.entries()}
-          </ul>
+          </div>
         </div>
       );
     }
