@@ -6,7 +6,7 @@ var MainPage = React.createClass({
   getDefaultProps: function() {
     var routes = {
       search: SearchPage,
-      results: true
+      user: UserPage
     };
 
     return {
