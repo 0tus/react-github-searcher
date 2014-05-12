@@ -22,20 +22,6 @@ var MainPage = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-    var self = this;
-
-    function updateState(json) {
-      self.setState({
-        results: json
-      });
-    }
-
-    jQuery
-      .getJSON("data/search_af.json")
-      .done(updateState);
-  },
-
   render: function() {
     var self = this;
 

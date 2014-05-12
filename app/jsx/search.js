@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-(function(global) {
+(function(global, lib, $) {
 
   // --- Header ---
 
@@ -59,17 +59,24 @@
   var CurrentResult = React.createClass({
     results: function() {
       if (this.props.nResults === 0) {
-        return "No nResults"
+        return "No Results"
       }
 
-      return this.props.nResults + "results";
+      return this.props.nResults + " results";
+    },
+    query: function() {
+      if (this.props.search.trim().length === 0) {
+        return "No search";
+      }
+
+      return "Query: " + this.props.search;
     },
     render: function() {
       return (
         <ul className="list-group">
           <li className="list-group-item list-group-item-info">
             <span className="badge">{this.results()}</span>
-            {this.props.search}
+            {this.query()}
           </li>
         </ul>
       );
@@ -102,25 +109,93 @@
   // --- Page ---
 
   var SearchPage = React.createClass({
+    debounceTime: 1000,
+
     getInitialState: function() {
       return {
         search:  this.props.initialSearch  || "",
-        results: this.props.initialResults || {}
+        results: this.props.initialResults || {},
+        queryPending: false
       };
     },
 
+    conponentWillUnmount: function() {
+      this.cancelAndCleanSearch();
+    },
+
+    cancelAndCleanSearch: function() {
+      var self = this;
+
+      function cancelAndClean(property) {
+        if (self[property]) {
+          self[property].abort();
+          self[property] = null;
+        }
+      }
+
+      ["debounce", "jqXHR"].forEach(cancelAndClean);
+    },
+
+    sendGithubQuery: function() {
+      var self = this;
+
+      function onSuccess(data) {
+        self.setState({
+          results: data,
+          queryPending: false
+        });
+      }
+
+      function onError(req, txtStatus, err) {
+        console.error(err);
+        self.setState({
+          queryPending: false
+        });
+      }
+
+      function cleanJqXHR() {
+        self.jqXHR = null;
+      }
+
+      this.debounce = null;
+
+      this.jqXHR = $
+        .ajax({
+          url: "https://api.github.com/search/users?q=" + this.state.search,
+          dataType: "json"
+        })
+        .done(onSuccess)
+        .fail(onError)
+        .always(cleanJqXHR);
+    },
+
+    debounceXHR: function() {
+      if (this.debounce) {
+        this.debounce();
+        return;
+      }
+
+      this.debounce = lib.debounce(this.sendGithubQuery, this.debounceTime, this);
+    },
+
     bodyData: function() {
-      var results = this.props.results;
+      var results = this.state.results;
 
       return {
         nResults: results && results.total_count || 0,
         items: results && results.items || [],
-        search: this.state.search || "No search"
+        search: this.state.search || ""
       };
     },
 
     handleSearchChange: function(data) {
+      var self = this;
+
+      data.queryPending = true;
+      if (data.search.trim().length === 0) { data.results = {}; }
       this.setState(data);
+
+      this.debounceXHR();
     },
 
     render: function() {
@@ -134,4 +209,4 @@
   });
 
   global.SearchPage = SearchPage;
-})(this);
+})(this, this, jQuery);
