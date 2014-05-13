@@ -28,7 +28,7 @@
   var Body = React.createClass({
     render: function() {
       return (
-        <div></div>
+        <div>{this.props.data.length}</div>
       );
     }
   });
@@ -36,11 +36,50 @@
   // --- page ---
 
   var UserPage = React.createClass({
+    getDefaultProps: function() {
+      return {
+        login: "AF83"
+      };
+    },
+
+    getInitialState: function() {
+      return {
+        data: []
+      };
+    },
+
+    sendGithubQuery: function() {
+      var self = this;
+
+      function onSuccess(data) {
+        console.log(data);
+        self.setState({
+          data: data
+        });
+      }
+
+      function onError(req, txtStatus, err) {
+        console.error(err);
+      }
+
+      jQuery
+        .ajax({
+          url: "https://api.github.com/users/" + this.props.login + "/repos",
+          dataType: "json"
+        })
+        .done(onSuccess)
+        .fail(onError);
+    },
+
+    componentDidMount: function() {
+      this.sendGithubQuery();
+    },
+
     render: function() {
       return (
         <div>
           <Header />
-          <Body />
+          <Body data={this.state.data}/>
         </div>
       );
     }
