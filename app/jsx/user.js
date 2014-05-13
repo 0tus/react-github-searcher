@@ -25,10 +25,58 @@
 
   // --- body ---
 
+  var FilterResults = React.createClass({
+    render: function() {
+      return (
+        <div></div>
+      );
+    }
+  });
+
+  var Pagination = React.createClass({
+    render: function() {
+      return (
+        <div></div>
+      );
+    }
+  });
+
+  var Repo = React.createClass({
+    render: function() {
+      var repo = this.props.repo;
+
+      return (
+        <a className="list-group-item" href={repo.html_url}>{repo.name}</a>
+      );
+    }
+  });
+
+  var Repos = React.createClass({
+    repos: function() {
+      function addRepo(repo) {
+        return <Repo key={repo.name} repo={repo} />;
+      }
+
+      return this.props.repos.map(addRepo);
+    },
+
+    render: function() {
+      return (
+        <div className="list-group">
+          {this.repos()}
+        </div>
+      );
+    }
+  });
+
   var Body = React.createClass({
     render: function() {
       return (
-        <div>{this.props.data.length}</div>
+        <div className="container" role="main">
+          <FilterResults />
+          <Pagination />
+          <Repos repos={this.props.repos} />
+        </div>
       );
     }
   });
@@ -36,15 +84,11 @@
   // --- page ---
 
   var UserPage = React.createClass({
-    getDefaultProps: function() {
-      return {
-        login: "AF83"
-      };
-    },
 
     getInitialState: function() {
       return {
-        data: []
+        repos: [],
+        page: 1
       };
     },
 
@@ -52,9 +96,8 @@
       var self = this;
 
       function onSuccess(data) {
-        console.log(data);
         self.setState({
-          data: data
+          repos: data || []
         });
       }
 
@@ -64,7 +107,10 @@
 
       jQuery
         .ajax({
-          url: "https://api.github.com/users/" + this.props.login + "/repos",
+          url: "https://api.github.com/users/" +
+               this.props.data.user.login +
+               "/repos?page=" +
+               this.state.page,
           dataType: "json"
         })
         .done(onSuccess)
@@ -79,7 +125,7 @@
       return (
         <div>
           <Header />
-          <Body data={this.state.data}/>
+          <Body repos={this.state.repos}/>
         </div>
       );
     }
