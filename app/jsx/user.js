@@ -12,11 +12,14 @@
             <div className="navbar-header">
               <a className="navbar-brand">Github Repos Navigator</a>
             </div>
-            <ul className="nav navbar-nav navbar-right">
-              <li>
-                <a href="#">New Search</a>
-              </li>
-            </ul>
+            <div className="navbar-header navbar-right">
+              <a className="navbar-brand">{this.props.user}</a>
+              <ul className="nav navbar-nav navbar-right">
+                <li>
+                  <a href="#">New Search</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       );
@@ -165,7 +168,7 @@
     render: function() {
       return (
         <div>
-          <Header />
+          <Header user={this.props.mainState.user.login}/>
           <Body
             pageState={this.state}
             mainState={this.props.mainState}
