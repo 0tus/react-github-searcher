@@ -46,7 +46,7 @@
       var data = this.props.data;
 
       return (
-        <a href={data.html_url} className="list-group-item entry-result">
+        <a href="#" className="list-group-item entry-result">
           <img src={data.avatar_url} className="pull-right" />
           <span className={this.icon()}></span>
           &nbsp;
@@ -58,18 +58,21 @@
 
   var CurrentResult = React.createClass({
     results: function() {
-      if (this.props.nResults === 0) {
-        return "No Results"
+      var results = this.props.pageState.results,
+          nResults = results && results.total_count || 0;
+
+      if (nResults === 0) {
+        return "No Results";
       }
 
-      return this.props.nResults + " results";
+      return nResults + " results";
     },
     query: function() {
-      if (this.props.search.trim().length === 0) {
+      if (this.props.pageState.search.trim().length === 0) {
         return "No search";
       }
 
-      return "Query: " + this.props.search;
+      return "Query: " + this.props.pageState.search;
     },
     render: function() {
       return (
@@ -84,20 +87,25 @@
   });
 
   var Body = React.createClass({
+
     entries: function() {
+      var results = this.props.pageState.results,
+          items = results && results.items || [];
+
       function addEntry(entry) {
         return <Entry key={entry.login} data={entry} />;
       }
 
-      return this.props.data.items.map(addEntry);
+      return items.map(addEntry);
     },
 
     render: function() {
-      var data = this.props.data;
+      var pageState = this.props.pageState,
+          nR;
 
       return (
         <div className="container" role="main">
-          <CurrentResult search={data.search}  nResults={data.nResults} />
+          <CurrentResult pageState={this.props.pageState} />
           <div className="list-group">
             {this.entries()}
           </div>
@@ -113,8 +121,8 @@
 
     getInitialState: function() {
       return {
-        search:  this.props.initialSearch  || "",
-        results: this.props.initialResults || {},
+        search:  this.props.mainState.search  || "",
+        results: {},
         queryPending: false
       };
     },
@@ -178,16 +186,6 @@
       this.debounce = lib.debounce(this.sendGithubQuery, this.debounceTime, this);
     },
 
-    bodyData: function() {
-      var results = this.state.results;
-
-      return {
-        nResults: results && results.total_count || 0,
-        items: results && results.items || [],
-        search: this.state.search || ""
-      };
-    },
-
     handleSearchChange: function(data) {
       var self = this;
 
@@ -198,11 +196,19 @@
       this.debounceXHR();
     },
 
+    handleClick: function(event) {
+      console.log(event);
+      return false;
+    },
+
     render: function() {
       return (
-        <div>
+        <div onClick={this.handleClick}>
           <Header onSearchChange={this.handleSearchChange} />
-          <Body data={this.bodyData()} />
+          <Body
+            mainState={this.props.mainState}
+            pageState={this.state}
+          />
         </div>
       );
     }

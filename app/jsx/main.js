@@ -51,7 +51,7 @@ var MainPage = React.createClass({
       query: "",
       user: USER,
       resultsPerPage: 30,
-      route: "user"
+      route: "search"
     };
   },
 
