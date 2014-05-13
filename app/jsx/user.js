@@ -35,7 +35,9 @@
 
   var Pagination = React.createClass({
     maxPages: function() {
-      return Math.ceil(this.props.user.public_repos / this.props.resultsPerPage);
+      var n = Math.ceil(this.props.user.public_repos / this.props.resultsPerPage);
+      // Display one page even if there are no repos
+      return n > 0 ? n : 1;
     },
     isFirstPage: function() {
       return this.props.page === 1;
@@ -49,11 +51,22 @@
     nextPageClass: function() {
       return this.isLastPage() ? "disabled" : "";
     },
+    pageButtons: function() {
+      var i, len, buttonClass, buttons = [];
+
+      for (i = 1, len = this.maxPages(); i <= len; i++) {
+        buttonClass = (i === this.props.page ? "active" : "");
+        buttons.push(<li key={i} className={buttonClass}><a href="#">{i}</a></li>);
+      }
+
+      return buttons;
+    },
     render: function() {
       return (
         <div>
           <ul className="pagination">
             <li className={this.prevPageClass()}><a href="#">&laquo;</a></li>
+            {this.pageButtons()}
             <li className={this.nextPageClass()}><a href="#">&raquo;</a></li>
           </ul>
         </div>
