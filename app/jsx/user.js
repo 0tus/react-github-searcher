@@ -28,7 +28,11 @@
   var FilterResults = React.createClass({
     render: function() {
       return (
-        <div></div>
+        <form className="form-inline" role="form">
+          <div className="form-group">
+            <input className="form-control" type="text" placeholder="Filter Repos" />
+          </div>
+        </form>
       );
     }
   });
