@@ -57,7 +57,7 @@ var MainPage = React.createClass({
 
   render: function() {
     return this.props.routes[this.state.route]({
-      data: this.state
+      mainState: this.state
     });
   }
 });

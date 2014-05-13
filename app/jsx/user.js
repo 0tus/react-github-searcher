@@ -108,7 +108,7 @@
       jQuery
         .ajax({
           url: "https://api.github.com/users/" +
-               this.props.data.user.login +
+               this.props.mainState.user.login +
                "/repos?page=" +
                this.state.page,
           dataType: "json"
@@ -125,7 +125,10 @@
       return (
         <div>
           <Header />
-          <Body repos={this.state.repos}/>
+          <Body
+            pageState={this.state}
+            mainState={this.props.mainState}
+          />
         </div>
       );
     }
