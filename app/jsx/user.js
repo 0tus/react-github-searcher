@@ -34,9 +34,29 @@
   });
 
   var Pagination = React.createClass({
+    maxPages: function() {
+      return Math.ceil(this.props.user.public_repos / this.props.resultsPerPage);
+    },
+    isFirstPage: function() {
+      return this.props.page === 1;
+    },
+    isLastPage: function() {
+      return this.props.page === this.maxPages()
+    },
+    prevPageClass: function() {
+      return this.isFirstPage() ? "disabled" : "";
+    },
+    nextPageClass: function() {
+      return this.isLastPage() ? "disabled" : "";
+    },
     render: function() {
       return (
-        <div></div>
+        <div>
+          <ul className="pagination">
+            <li className={this.prevPageClass()}><a href="#">&laquo;</a></li>
+            <li className={this.nextPageClass()}><a href="#">&raquo;</a></li>
+          </ul>
+        </div>
       );
     }
   });
@@ -74,8 +94,12 @@
       return (
         <div className="container" role="main">
           <FilterResults />
-          <Pagination />
-          <Repos repos={this.props.repos} />
+          <Pagination
+            user={this.props.mainState.user}
+            resultsPerPage={this.props.mainState.resultsPerPage}
+            page={this.props.pageState.page}
+          />
+          <Repos repos={this.props.pageState.repos} />
         </div>
       );
     }
