@@ -32,17 +32,19 @@
 
   // --- body ---
 
-  var FilterResults = React.createClass({
-    render: function() {
-      return (
-        <form className="form-inline" role="form">
-          <div className="form-group">
-            <input className="form-control" type="text" placeholder="Filter Repos" />
-          </div>
-        </form>
-      );
-    }
-  });
+  // TODO Feature
+
+  //var FilterResults = React.createClass({
+    //render: function() {
+      //return (
+        //<form className="form-inline" role="form">
+          //<div className="form-group">
+            //<input className="form-control" type="text" placeholder="Filter Repos" />
+          //</div>
+        //</form>
+      //);
+    //}
+  //});
 
   var PaginationButton = React.createClass({
     handlePageChange: function() {
@@ -170,7 +172,6 @@
     render: function() {
       return (
         <div className="container" role="main">
-          <FilterResults />
           <Pagination
             pageState={this.props.pageState}
             mainState={this.props.mainState}
