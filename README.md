@@ -4,7 +4,7 @@ React JS Github repo navigator
 Installation
 ------------
 
-Node.js are required.
+Node.js is required.
 
 From the project root folder:
 ```shell
