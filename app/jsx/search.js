@@ -20,7 +20,14 @@
             <div>
               <form className="navbar-form navbar-right" role="form">
                 <div className="form-group">
-                  <input placeholder="User or organization" className="form-control" type="text" ref="search" onChange={this.handleSearchChange} />
+                  <input
+                    placeholder="User or organization"
+                    className="form-control"
+                    type="text"
+                    ref="search"
+                    onChange={this.handleSearchChange}
+                    defaultValue={this.props.pageState.search}
+                  />
                 </div>
               </form>
             </div>
@@ -140,10 +147,14 @@
 
     getInitialState: function() {
       return {
-        search:  this.props.mainState.search  || "",
+        search: this.props.mainState.query || "",
         results: {},
         queryPending: false
       };
+    },
+
+    componentDidMount: function() {
+      this.sendGithubQuery();
     },
 
     conponentWillUnmount: function() {
@@ -221,7 +232,11 @@
     render: function() {
       return (
         <div>
-          <Header onSearchChange={this.handleSearchChange} />
+          <Header
+            onSearchChange={this.handleSearchChange}
+            mainState={this.props.mainState}
+            pageState={this.state}
+          />
           <Body
             mainState={this.props.mainState}
             pageState={this.state}

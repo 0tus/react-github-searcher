@@ -5,6 +5,10 @@
   // --- header ---
 
   var Header = React.createClass({
+    handleNavToSearchPage: function() {
+      this.props.mainHandlers.handleNavToSearchPage();
+      return false;
+    },
     render: function() {
       return (
         <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -16,7 +20,7 @@
               <a className="navbar-brand">{this.props.user}</a>
               <ul className="nav navbar-nav navbar-right">
                 <li>
-                  <a href="#">New Search</a>
+                  <a href="#" onClick={this.handleNavToSearchPage}>New Search</a>
                 </li>
               </ul>
             </div>
@@ -174,7 +178,10 @@
     render: function() {
       return (
         <div>
-          <Header user={this.props.mainState.user.login}/>
+          <Header
+            user={this.props.mainState.user.login}
+            mainHandlers={this.props.mainHandlers}
+          />
           <Body
             pageState={this.state}
             mainState={this.props.mainState}
