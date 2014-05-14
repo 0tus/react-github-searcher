@@ -167,6 +167,8 @@
 
       this.debounce = null;
 
+      if (this.state.search.trim().length === 0) { return; }
+
       this.jqXHR = $
         .ajax({
           url: "https://api.github.com/search/users?q=" + this.state.search,
