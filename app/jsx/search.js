@@ -42,11 +42,23 @@
       return "glyphicon " + this.iconTypes[this.props.data.type];
     },
 
+    handleUserSelection: function() {
+      this.props.onUserSelection({
+        user: this.props.data,
+        query: this.props.pageState.search
+      });
+      return false;
+    },
+
     render: function() {
       var data = this.props.data;
 
       return (
-        <a href="#" className="list-group-item entry-result" onClick={this.props.onUserSelection}>
+        <a
+          href="#"
+          className="list-group-item entry-result"
+          onClick={this.handleUserSelection}
+        >
           <img src={data.avatar_url} className="pull-right" />
           <span className={this.icon()}></span>
           &nbsp;
@@ -98,6 +110,7 @@
           <Entry
             key={entry.login}
             data={entry}
+            pageState={self.props.pageState}
             onUserSelection={self.props.mainHandlers.handleUserSelection}
           />
         );
