@@ -184,6 +184,7 @@
       }
 
       this.debounce = lib.debounce(this.sendGithubQuery, this.debounceTime, this);
+      this.debounce();
     },
 
     handleSearchChange: function(data) {
