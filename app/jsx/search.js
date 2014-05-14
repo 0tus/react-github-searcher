@@ -5,9 +5,9 @@
   // --- Header ---
 
   var Header = React.createClass({
-    handleSearchChange: function() {
-      var search = this.refs.search.getDOMNode().value.trim();
-      this.props.onSearchChange({ search: search });
+    handleQueryChange: function() {
+      var query = this.refs.query.getDOMNode().value.trim();
+      this.props.onQueryChange({ query: query });
     },
 
     render: function() {
@@ -24,9 +24,9 @@
                     placeholder="User or organization"
                     className="form-control"
                     type="text"
-                    ref="search"
-                    onChange={this.handleSearchChange}
-                    defaultValue={this.props.pageState.search}
+                    ref="query"
+                    onChange={this.handleQueryChange}
+                    defaultValue={this.props.pageState.query}
                   />
                 </div>
               </form>
@@ -52,7 +52,7 @@
     handleUserSelection: function() {
       this.props.onUserSelection({
         userLogin: this.props.data.login,
-        query: this.props.pageState.search
+        query: this.props.pageState.query
       });
       return false;
     },
@@ -87,11 +87,11 @@
       return nResults + " results";
     },
     query: function() {
-      if (this.props.pageState.search.trim().length === 0) {
-        return "No search";
+      if (this.props.pageState.query.trim().length === 0) {
+        return "No Query";
       }
 
-      return "Query: " + this.props.pageState.search;
+      return "Query: " + this.props.pageState.query;
     },
     render: function() {
       return (
@@ -147,7 +147,7 @@
 
     getInitialState: function() {
       return {
-        search: this.props.mainState.query || "",
+        query: this.props.mainState.query || "",
         results: {},
         queryPending: false
       };
@@ -158,10 +158,10 @@
     },
 
     conponentWillUnmount: function() {
-      this.cancelAndCleanSearch();
+      this.cancelAndCleanQuery();
     },
 
-    cancelAndCleanSearch: function() {
+    cancelAndCleanQuery: function() {
       var self = this;
 
       function cancelAndClean(property) {
@@ -197,11 +197,11 @@
 
       this.debounce = null;
 
-      if (this.state.search.trim().length === 0) { return; }
+      if (this.state.query.trim().length === 0) { return; }
 
       this.jqXHR = $
         .ajax({
-          url: "https://api.github.com/search/users?q=" + this.state.search,
+          url: "https://api.github.com/search/users?q=" + this.state.query,
           dataType: "json"
         })
         .done(onSuccess)
@@ -219,11 +219,11 @@
       this.debounce();
     },
 
-    handleSearchChange: function(data) {
+    handleQueryChange: function(data) {
       var self = this;
 
       data.queryPending = true;
-      if (data.search.trim().length === 0) { data.results = {}; }
+      if (data.query.trim().length === 0) { data.results = {}; }
       this.setState(data);
 
       this.debounceXHR();
@@ -233,7 +233,7 @@
       return (
         <div>
           <Header
-            onSearchChange={this.handleSearchChange}
+            onQueryChange={this.handleQueryChange}
             mainState={this.props.mainState}
             pageState={this.state}
           />
