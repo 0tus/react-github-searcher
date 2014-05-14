@@ -17,7 +17,7 @@
               <a className="navbar-brand">Github Repos Navigator</a>
             </div>
             <div className="navbar-header navbar-right">
-              <a className="navbar-brand">{this.props.user}</a>
+              <a className="navbar-brand">{this.props.mainState.userLogin}</a>
               <ul className="nav navbar-nav navbar-right">
                 <li>
                   <a href="#" onClick={this.handleNavToSearchPage}>New Search</a>
@@ -46,15 +46,21 @@
 
   var Pagination = React.createClass({
     maxPages: function() {
-      var n = Math.ceil(this.props.user.public_repos / this.props.resultsPerPage);
+      var n,
+          pageState = this.props.pageState,
+          mainState = this.props.mainState
+
+      if (!pageState.user.public_repos) { return 1; }
+
+      var n = Math.ceil(pageState.user.public_repos / mainState.resultsPerPage);
       // Display one page even if there are no repos
       return n > 0 ? n : 1;
     },
     isFirstPage: function() {
-      return this.props.page === 1;
+      return this.props.pageState.page === 1;
     },
     isLastPage: function() {
-      return this.props.page === this.maxPages()
+      return this.props.pageState.page === this.maxPages()
     },
     prevPageClass: function() {
       return this.isFirstPage() ? "disabled" : "";
@@ -66,7 +72,7 @@
       var i, len, buttonClass, buttons = [];
 
       for (i = 1, len = this.maxPages(); i <= len; i++) {
-        buttonClass = (i === this.props.page ? "active" : "");
+        buttonClass = (i === this.props.pageState.page ? "active" : "");
         buttons.push(<li key={i} className={buttonClass}><a href="#">{i}</a></li>);
       }
 
@@ -125,9 +131,8 @@
         <div className="container" role="main">
           <FilterResults />
           <Pagination
-            user={this.props.mainState.user}
-            resultsPerPage={this.props.mainState.resultsPerPage}
-            page={this.props.pageState.page}
+            pageState={this.props.pageState}
+            mainState={this.props.mainState}
           />
           <Repos repos={this.props.pageState.repos} />
         </div>
@@ -141,34 +146,54 @@
 
     getInitialState: function() {
       return {
+        user: {},
         repos: [],
         page: 1
       };
     },
 
-    sendGithubQuery: function() {
-      var self = this;
+    componentDidMount: function() {
+      this.sendGithubQuery();
+    },
 
-      function onSuccess(data) {
-        self.setState({
-          repos: data || []
-        });
+    sendGithubQuery: function() {
+      var self = this, xhrUser, xhrRepos,
+          userLogin = this.props.mainState.userLogin,
+          newState = {};
+
+      function onUserSuccess(data) {
+        newState.user = data;
+      }
+
+      function onReposSuccess(data) {
+        newState.repos = data;
       }
 
       function onError(req, txtStatus, err) {
         console.error(err);
       }
 
-      jQuery
-        .ajax({
-          url: "https://api.github.com/users/" +
-               this.props.mainState.user.login +
-               "/repos?page=" +
-               this.state.page,
-          dataType: "json"
-        })
-        .done(onSuccess)
+      function updateState() {
+        self.setState(newState);
+      }
+
+      xhrUser = jQuery
+        .getJSON("https://api.github.com/users/" + userLogin)
+        .done(onUserSuccess)
         .fail(onError);
+
+      xhrRepos = jQuery
+        .getJSON(
+          "https://api.github.com/users/" +
+          userLogin +
+          "/repos?page=" +
+          this.state.page)
+        .done(onReposSuccess)
+        .fail(onError);
+
+      jQuery
+        .when(xhrUser, xhrRepos)
+        .always(updateState)
     },
 
     componentDidMount: function() {
@@ -179,7 +204,7 @@
       return (
         <div>
           <Header
-            user={this.props.mainState.user.login}
+            mainState={this.props.mainState}
             mainHandlers={this.props.mainHandlers}
           />
           <Body
