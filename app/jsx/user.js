@@ -86,7 +86,13 @@
       var repo = this.props.repo;
 
       return (
-        <a className="list-group-item" href={repo.html_url}>{repo.name}</a>
+        <a
+          className="list-group-item"
+          href={repo.html_url}
+          target="_blank"
+        >
+          {repo.name}
+        </a>
       );
     }
   });
