@@ -17,7 +17,7 @@ var MainPage = React.createClass({
   getInitialState: function() {
     return {
       query: "",
-      user: {},
+      userLogin: "",
       resultsPerPage: 30,
       route: "search"
     };
