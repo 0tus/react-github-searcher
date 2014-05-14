@@ -44,6 +44,21 @@
     }
   });
 
+  var PaginationButton = React.createClass({
+    handlePageChange: function() {
+      if (this.props.page < 1) { return false; }
+      this.props.pageHandlers.handlePageChange(this.props.page);
+      return false;
+    },
+    render: function() {
+      return (
+        <li onClick={this.handlePageChange} className={this.props.klass}>
+          <a href="">{this.props.content}</a>
+        </li>
+      );
+    }
+  });
+
   var Pagination = React.createClass({
     maxPages: function() {
       var n,
@@ -68,12 +83,28 @@
     nextPageClass: function() {
       return this.isLastPage() ? "disabled" : "";
     },
+    prevPageNumber: function() {
+      return this.isFirstPage() ? 0 : this.props.pageState.page - 1;
+    },
+    nextPageNumber: function() {
+      return this.isLastPage() ? 0 : this.props.pageState.page + 1;
+    },
     pageButtons: function() {
       var i, len, buttonClass, buttons = [];
 
       for (i = 1, len = this.maxPages(); i <= len; i++) {
         buttonClass = (i === this.props.pageState.page ? "active" : "");
-        buttons.push(<li key={i} className={buttonClass}><a href="#">{i}</a></li>);
+        pageNumber = (i === this.props.pageState.page) ? 0 : i;
+
+        buttons.push(
+          <PaginationButton
+            key={i}
+            page={pageNumber}
+            content={i}
+            klass={buttonClass}
+            pageHandlers={this.props.pageHandlers}
+          />
+        );
       }
 
       return buttons;
@@ -82,9 +113,19 @@
       return (
         <div>
           <ul className="pagination">
-            <li className={this.prevPageClass()}><a href="#">&laquo;</a></li>
+            <PaginationButton
+              page={this.prevPageNumber()}
+              content="&laquo;"
+              klass={this.prevPageClass()}
+              pageHandlers={this.props.pageHandlers}
+            />
             {this.pageButtons()}
-            <li className={this.nextPageClass()}><a href="#">&raquo;</a></li>
+            <PaginationButton
+              page={this.nextPageNumber()}
+              content="&raquo;"
+              klass={this.nextPageClass()}
+              pageHandlers={this.props.pageHandlers}
+            />
           </ul>
         </div>
       );
@@ -133,6 +174,7 @@
           <Pagination
             pageState={this.props.pageState}
             mainState={this.props.mainState}
+            pageHandlers={this.props.pageHandlers}
           />
           <Repos repos={this.props.pageState.repos} />
         </div>
@@ -196,8 +238,43 @@
         .always(updateState)
     },
 
-    componentDidMount: function() {
-      this.sendGithubQuery();
+    handlePageChange: function(page) {
+      var self = this;
+
+      function fetchSuccess(repos) {
+        self.setState({
+          repos: repos,
+          page: page
+        });
+      }
+
+      function fetchError(req, txtStatus, err) {
+        console.error(err);
+      }
+
+      function cleanXHR() {
+        self.pageXHR = null;
+      }
+
+      if (this.pageXHR) {
+        this.pageXHR.abort();
+      }
+
+      jQuery
+        .getJSON(
+          "https://api.github.com/users/" +
+          this.props.mainState.userLogin +
+          "/repos?page=" +
+          page)
+        .done(fetchSuccess)
+        .fail(fetchError)
+        .always(cleanXHR);
+    },
+
+    pageHandlers: function() {
+      return {
+        handlePageChange: this.handlePageChange
+      };
     },
 
     render: function() {
@@ -210,6 +287,7 @@
           <Body
             pageState={this.state}
             mainState={this.props.mainState}
+            pageHandlers={this.pageHandlers()}
           />
         </div>
       );
