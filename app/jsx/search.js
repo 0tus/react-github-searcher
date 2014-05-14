@@ -46,7 +46,7 @@
       var data = this.props.data;
 
       return (
-        <a href="#" className="list-group-item entry-result">
+        <a href="#" className="list-group-item entry-result" onClick={this.props.onUserSelection}>
           <img src={data.avatar_url} className="pull-right" />
           <span className={this.icon()}></span>
           &nbsp;
@@ -89,19 +89,25 @@
   var Body = React.createClass({
 
     entries: function() {
-      var results = this.props.pageState.results,
+      var self = this,
+          results = this.props.pageState.results,
           items = results && results.items || [];
 
       function addEntry(entry) {
-        return <Entry key={entry.login} data={entry} />;
+        return (
+          <Entry
+            key={entry.login}
+            data={entry}
+            onUserSelection={self.props.mainHandlers.handleUserSelection}
+          />
+        );
       }
 
       return items.map(addEntry);
     },
 
     render: function() {
-      var pageState = this.props.pageState,
-          nR;
+      var pageState = this.props.pageState;
 
       return (
         <div className="container" role="main">
@@ -199,18 +205,14 @@
       this.debounceXHR();
     },
 
-    handleClick: function(event) {
-      console.log(event);
-      return false;
-    },
-
     render: function() {
       return (
-        <div onClick={this.handleClick}>
+        <div>
           <Header onSearchChange={this.handleSearchChange} />
           <Body
             mainState={this.props.mainState}
             pageState={this.state}
+            mainHandlers={this.props.mainHandlers}
           />
         </div>
       );

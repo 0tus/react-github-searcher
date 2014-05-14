@@ -55,9 +55,23 @@ var MainPage = React.createClass({
     };
   },
 
+  handleUserSelection: function(data) {
+    console.log(data);
+    //data.route = "user";
+    //this.setState(data);
+    return false;
+  },
+
+  mainHandlers: function() {
+    return {
+      handleUserSelection: this.handleUserSelection
+    };
+  },
+
   render: function() {
     return this.props.routes[this.state.route]({
-      mainState: this.state
+      mainState: this.state,
+      mainHandlers: this.mainHandlers()
     });
   }
 });
