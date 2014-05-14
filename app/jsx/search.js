@@ -51,7 +51,7 @@
 
     handleUserSelection: function() {
       this.props.onUserSelection({
-        user: this.props.data,
+        userLogin: this.props.data.login,
         query: this.props.pageState.search
       });
       return false;
