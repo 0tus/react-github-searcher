@@ -1,3 +1,4 @@
 .module-cache/
 /public/vendor/
 /public/js/
+/node_modules/
