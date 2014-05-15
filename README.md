@@ -1,6 +1,7 @@
-React JS Github repo navigator
-==============================
+React JS Github Repo Searcher
+=============================
 
+Search users and organizations on Github. Browse their repos.
 
 Installation
 ------------
