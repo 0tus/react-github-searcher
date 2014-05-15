@@ -8,8 +8,7 @@ Node.js is required.
 
 From the project root folder:
 ```shell
-npm install
-npm run install-vendors
+npm run init
 ```
 
 JSX files

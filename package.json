@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "init": "npm install; bower install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "jsx --watch app/jsx public/js",
     "serve": "http-server",
