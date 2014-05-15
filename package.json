@@ -6,6 +6,7 @@
   "scripts": {
     "init": "npm install; bower install",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "jsx app/jsx public/js",
     "watch": "jsx --watch app/jsx public/js",
     "serve": "http-server",
     "install-vendors": "bower install"

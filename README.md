@@ -1,6 +1,7 @@
 React JS Github repo navigator
 ==============================
 
+
 Installation
 ------------
 
@@ -11,10 +12,16 @@ From the project root folder:
 npm run init
 ```
 
-JSX files
----------
 
-All `.js(x)` files go into `app/jsx`
+Run the app
+-----------
+
+Build it: `npm run build`
+
+And serve it: `npm run serve`
+
+Go to `http://localhost:8080` in your favorite web browser.
+
 
 Development
 -----------
@@ -23,4 +30,10 @@ Run `npm run watch` for live jsx files recompiling.
 
 Run `npm run serve` to launch a local http server on port 8080.
 
-Open your favorite web browser and open `http://localhost:8080`
+Go to `http://localhost:8080` in your favorite web browser.
+
+
+JSX files
+---------
+
+All `.js(x)` files go into `app/jsx`. The are then compiled into `public/js`
