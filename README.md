@@ -38,3 +38,9 @@ JSX files
 ---------
 
 All `.js(x)` files go into `app/jsx`. The are then compiled into `public/js`
+
+
+Copyright
+---------
+
+MIT. See LICENSE.md for further details.
