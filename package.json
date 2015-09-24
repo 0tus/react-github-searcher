@@ -1,10 +1,9 @@
 {
   "name": "react-github-repos",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "init": "npm install; bower install",
+    "init": "npm install && bower install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "jsx app/jsx public/js",
     "watch": "jsx --watch app/jsx public/js",
@@ -12,9 +11,9 @@
     "install-vendors": "bower install"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "http-server": "0.8.3",
+    "http-server": "0.8.0",
     "react-tools": "0.13.3",
     "bower": "1.5.3"
   }
